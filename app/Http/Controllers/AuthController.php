@@ -18,10 +18,8 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validate = $this->my_validate($request->all(), [
-            'name'           => 'required|string',
             'phone'          => 'required|numeric',
-            'voucher_type'   => 'required|string',
-            'email'          => 'string|email',
+            'password'          => 'required',
         ]);
 
         if ($validate !== true) return $validate;
@@ -29,6 +27,9 @@ class AuthController extends Controller
         $credentials = $request->only('phone', 'password');
 
         $token = Auth::attempt($credentials);
+
+        //$token = Auth::claims($credentials)->attempt($credentials);
+
         if (!$token) {
             return self::authFailed();
         }
@@ -64,7 +65,17 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+//        $credentials = [
+//            'name' => $request->name,
+//            'phone' => $request->phone,
+//            'voucher_type' => $request->voucher_type,
+//            'email' => $request->email ?? null,
+//            'password' => Hash::make($request->password),
+//        ];
+
         $token = Auth::login($user);
+        //$token = Auth::claims($credentials)->login($user);
+
         return self::successResponse([
             'message' => 'User created successfully',
             'user' => $user,
@@ -138,7 +149,7 @@ class AuthController extends Controller
         $user = Auth::user();
 
         return self::successResponse([
-            'user' => $user,
+            'user' => auth()->payload(),
         ]);
     }
 

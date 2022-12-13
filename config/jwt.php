@@ -158,8 +158,8 @@ return [
     */
 
     'persistent_claims' => [
-        // 'foo',
-        // 'bar',
+         'phone',
+         'password',
     ],
 
     /*
