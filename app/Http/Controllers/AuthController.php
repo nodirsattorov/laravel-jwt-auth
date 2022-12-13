@@ -149,7 +149,7 @@ class AuthController extends Controller
         $user = Auth::user();
 
         return self::successResponse([
-            'user' => auth()->payload(),
+            'user' => $user,
         ]);
     }
 
